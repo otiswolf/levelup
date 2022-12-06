@@ -1,8 +1,10 @@
 const express = require("express");
+const path = require("path");
 
 const app = express();
 const PORT = 3000;
 app.use(express.json());
+app.use(express.urlencoded());
 
 let stats = {
   mind: 0,
@@ -14,9 +16,9 @@ let stats = {
 app.post("/add-exp", (req, res) => {
   const type = req.body.type;
   const value = req.body.value;
-  console.log(`recieved exp of type ${type} and value ${value}`);
+  console.log(req.body);
   if (type in stats) {
-    stats[type] += value;
+    stats[type] += parseInt(value);
     res.send(req.body);
   } else {
     res.status(400);
@@ -30,7 +32,7 @@ app.get("/stats", (req, res) => {
 
 app.get("/", (req, res) => {
   res.status(200);
-  res.send("Welcome to root URL of Server");
+  res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 app.listen(PORT, (error) => {
